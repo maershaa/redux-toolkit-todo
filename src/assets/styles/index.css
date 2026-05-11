@@ -1,0 +1,243 @@
+:root {
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: 0.18px;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+#root {
+  max-width: 1126px;
+  width: 100%;
+
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2 {
+  font-weight: 500;
+}
+
+section {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+h2 {
+  margin: 50px 0 20px 0;
+}
+
+.filter_list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  margin-bottom: 30px;
+}
+
+.filter_list li {
+  cursor: pointer;
+  padding: 10px 14px;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.filter_list li:hover {
+  border-color: rgb(181, 24, 168, 0.4);
+  background-color: rgba(181, 24, 168, 0.08);
+}
+
+.filter_list li.active {
+  border-color: rgb(181, 24, 168);
+  background-color: rgba(181, 24, 168, 0.12);
+}
+
+.tasks_list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  margin-bottom: 50px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  width: 100%;
+
+  border-bottom: 1px solid #2d2d2d;
+  padding-bottom: 12px;
+}
+
+.task p {
+  flex: 1; /* flex: 1 говорит: "займи всё свободное пространство" */
+
+  text-align: left;
+  color: #eee;
+
+  line-height: 1.5;
+
+  transition:
+    opacity 0.3s ease,
+    color 0.3s ease;
+}
+
+.task p.completed {
+  opacity: 0.8;
+  text-decoration: line-through;
+}
+
+@media (max-width: 768px) {
+  .task {
+    flex-wrap: wrap;
+  }
+
+  .task p {
+    max-width: 100%;
+  }
+}
+
+.task button {
+  border-radius: 8px;
+}
+
+.delete_btn {
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  color: #cfcfcf;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease,
+    color 0.25s ease;
+}
+
+.delete_btn:hover {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+
+  transform: scale(1.05);
+}
+
+.delete_btn:active {
+  transform: scale(0.96);
+}
+
+.delete_btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.todo-checkbox {
+  width: 28px;
+  height: 28px;
+}
+
+.todo-form {
+  display: flex;
+  align-items: center;
+
+  background: #fdfcfc;
+  padding: 8px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  margin: 0 auto;
+}
+
+.todo-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+}
+
+.todo-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.todo-button:hover {
+  transform: scale(1.1);
+}
+
+.todo-button svg {
+  width: 32px;
+  height: 32px;
+}
