@@ -44,6 +44,15 @@ select {
   font: inherit;
 }
 
+button {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+}
+
 #root {
   max-width: 1126px;
   width: 100%;
@@ -81,7 +90,6 @@ h2 {
 }
 
 .filter_list li {
-  cursor: pointer;
   padding: 10px 14px;
 
   border: 1px solid transparent;

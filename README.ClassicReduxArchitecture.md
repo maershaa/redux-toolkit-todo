@@ -1,53 +1,85 @@
-# Todo List — Classic Redux Architecture
+# VITE-REACT-REDUX-TODO
 
-Учебный проект Todo List, чтобы разобраться в базовой архитектуре Redux, реализованный с использованием классического Redux-подхода:
+Учебный проект Todo List, реализованный на React + Redux Toolkit с классическим Redux-подходом (switch/case) и разделением логики на actions, reducers и store.
+
+В дальнейшем проект расширяется через отдельные ветки с разными подходами Redux:
+
+- createReducer
+- createSlice
+
+---
+
+# 🚀 Возможности проекта
+
+- Добавление задач
+- Удаление задач
+- Отметка выполнения задач
+- Фильтрация задач:
+  - All
+  - Active
+  - Completed
+
+---
+
+# 🧠 Используемый подход
+
+В этом проекте реализован **классический Redux-подход**:
 
 - configureStore
-- reducers
-- switch/case
-- dispatch
-- useSelector
-- useDispatch
+- reducers (switch/case)
+- actions вынесены в отдельные файлы
+- useSelector / useDispatch
+- immutable state updates
 
 ---
 
-# Технологии
+# 📁 Структура проекта
 
-- React
-- Redux Toolkit
-- React Redux
-- Vite
-- CSS
-
----
-
-# Структура проекта
-
-src/
+```txt
+VITE-REACT-REDUX-TODO/
+├── dist/
+├── node_modules/
+├── public/
+│   ├── favicon.svg
+│   └── icons.svg
 │
-├── redux/
-│ ├── store.js
-│ │
-│ ├── todo/
-│ │ └── todoReducer.js
-│ │
-│ └── filter/
-│ └── filterReducer.js
+├── src/
+│   ├── app/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   ├── assets/
+│   │   └── styles/
+│   │       └── index.css
+│   │
+│   └── redux/
+│       ├── store.js
+│       │
+│       ├── todo/
+│       │   ├── todoReducer.js
+│       │   └── todosActions.js
+│       │
+│       └── filter/
+│           ├── filterReducer.js
+│           └── filterActions.js
+│
+├── index.html
+├── vite.config.js
+├── package.json
+└── README.md
+```
+
+````
 
 ---
 
-# Как работает Redux в проекте
-
-Redux хранит глобальное состояние приложения в store.
-
-В этом проекте состояние разделено на 2 части:
+# 🗄️ Redux State Structure
 
 ```js
 state = {
   todos: {
     items: [],
   },
-
   filter: {
     value: 'all',
   },
@@ -56,9 +88,9 @@ state = {
 
 ---
 
-# store.js
+# ⚙️ store.js
 
-Файл store.js создает Redux store через configureStore.
+Конфигурация Redux store через `configureStore`.
 
 ```js
 import { configureStore } from '@reduxjs/toolkit';
@@ -75,98 +107,72 @@ export default configureStore({
 
 ---
 
-# todoReducer.js
+# 🧩 Reducers
+
+## todoReducer.js
 
 Отвечает за:
 
 - добавление задач
 - удаление задач
-- изменение статуса задачи
+- переключение статуса
 
-Используется классический Redux-подход через switch/case.
+Использует `switch/case` и immutable update.
 
-_Начальное состояние_
+---
+
+## filterReducer.js
+
+Управляет текущим фильтром задач:
+
+- all
+- active
+- completed
+
+---
+
+# 🎯 Actions (вынесены отдельно)
+
+## todosActions.js
 
 ```js
-const initialState = {
-  items: [],
-};
+export const addTodo = (text) => ({
+  type: 'todos/add',
+  payload: text,
+});
+
+export const deleteTodo = (id) => ({
+  type: 'todos/delete',
+  payload: id,
+});
+
+export const toggleTodo = (id) => ({
+  type: 'todos/toggle',
+  payload: id,
+});
 ```
 
 ---
 
-_Добавление задачи_
+## filterActions.js
 
 ```js
-case 'todos/add'
-```
-
-Создает новый объект задачи и добавляет его в массив.
-
----
-
-_Переключение статуса задачи_
-
-```js
-case 'todos/toggle'
-```
-
-Меняет:
-
-```js
-isCompleted: true <-> false
+export const setFilter = (value) => ({
+  type: 'filter/set',
+  payload: value,
+});
 ```
 
 ---
 
-_Удаление задачи_
+# ⚛️ React подключение Redux
 
-```js
-case 'todos/delete'
-```
-
-Удаляет задачу через filter().
-
----
-
-# filterReducer.js
-
-Хранит текущий фильтр:
-
-```js
-'all';
-'active';
-'completed';
-```
-
-_Начальное состояние_
-
-```js
-const initialState = {
-  value: 'all',
-};
-```
-
----
-
-_Изменение фильтра_
-
-```js
-case 'filter/set'
-```
-
-Обновляет текущее значение фильтра.
-
----
-
-# Подключение Redux к React
-
-В main.jsx приложение оборачивается в Provider.
+## main.jsx
 
 ```js
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import store from '../redux/store';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
@@ -175,25 +181,20 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 ```
 
-Provider дает доступ ко всему Redux store внутри приложения.
-
 ---
 
-# useSelector
+# 📦 Работа с состоянием
 
-useSelector используется для получения данных из store.
+## useSelector
 
 ```js
 const todos = useSelector((state) => state.todos.items);
-
 const filter = useSelector((state) => state.filter.value);
 ```
 
 ---
 
-# useDispatch
-
-useDispatch используется для отправки actions в Redux.
+## useDispatch
 
 ```js
 const dispatch = useDispatch();
@@ -201,112 +202,61 @@ const dispatch = useDispatch();
 
 ---
 
-# Dispatch Actions
+# 🧾 Dispatch Actions
 
-## Добавление задачи
+## Добавить задачу
 
 ```js
-dispatch({
-  type: 'todos/add',
-  payload: todoText,
-});
+dispatch(addTodo(todoText));
 ```
 
 ---
 
-## Удаление задачи
+## Удалить задачу
 
 ```js
-dispatch({
-  type: 'todos/delete',
-  payload: todoId,
-});
+dispatch(deleteTodo(id));
 ```
 
 ---
 
-## Изменение статуса
+## Переключить статус
 
 ```js
-dispatch({
-  type: 'todos/toggle',
-  payload: todoId,
-});
+dispatch(toggleTodo(id));
 ```
 
 ---
 
-## Изменение фильтра
+## Изменить фильтр
 
 ```js
-dispatch({
-  type: 'filter/set',
-  payload: 'completed',
-});
+dispatch(setFilter('active'));
 ```
 
 ---
 
-# Как работает Redux Flow
+# 🔄 Redux Flow
 
-## 1. Компонент вызывает dispatch
-
-```js
-dispatch({
-  type: 'todos/add',
-  payload: 'Изучить Redux',
-});
-```
-
-↓
-
-## 2. Action попадает в reducer
-
-```js
-case 'todos/add'
-```
-
-↓
-
-## 3. Reducer создает новый state
-
-```js
-return {
-  ...state,
-  items: [...state.items, newTodo],
-};
-```
-
-↓
-
-## 4. Redux обновляет store
-
-↓
-
-## 5. React автоматически перерисовывает UI
+1. UI вызывает dispatch
+2. action попадает в reducer
+3. reducer возвращает новый state
+4. store обновляется
+5. React перерисовывает UI
 
 ---
 
-# Почему используется immutable update
+# 🧠 Почему Redux immutable
 
-Redux state нельзя изменять напрямую.
-
-❌ Неправильно:
+❌ Нельзя:
 
 ```js
-state.items.push(newTodo);
+state.items.push(todo);
 ```
 
-✅ Правильно:
+✅ Нужно:
 
 ```js
-items: [...state.items, newTodo];
+items: [...state.items, todo];
 ```
-
-Это позволяет Redux правильно отслеживать изменения.
-
----
-
-```
-
-```
+````

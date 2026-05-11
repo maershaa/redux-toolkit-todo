@@ -1,29 +1,32 @@
-// import { Counter } from '../redux/Counter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useMemo } from 'react';
+import { addTodo, deleteTodo, toggleTodo } from '../redux/todo/todosActions';
+import { setFilter } from '../redux/filter/filterActions';
 
 function App() {
   const todos = useSelector((state) => state.todos.items);
   const filter = useSelector((state) => state.filter.value);
+  const filters = ['all', 'active', 'completed'];
+
   const dispatch = useDispatch();
 
   const handleAddTodo = (evt) => {
     evt.preventDefault();
-    let todoText = evt.target.todoText.value.trim();
-    dispatch({ type: 'todos/add', payload: todoText });
+    const todoText = evt.target.todoText.value.trim();
+    dispatch(addTodo(todoText));
     evt.target.todoText.value = '';
   };
 
   const handleTodoDelete = (todoId) => {
-    dispatch({ type: 'todos/delete', payload: todoId });
+    dispatch(deleteTodo(todoId));
   };
 
   const toggleTodoStatus = (todoId) => {
-    dispatch({ type: 'todos/toggle', payload: todoId });
+    dispatch(toggleTodo(todoId));
   };
 
-  const setStatusFilter = (filterName) => {
-    dispatch({ type: 'filter/set', payload: filterName });
+  const handleFilterChange = (filterName) => {
+    dispatch(setFilter(filterName));
   };
 
   const filteredTodos = useMemo(() => {
@@ -36,36 +39,19 @@ function App() {
     }
   }, [filter, todos]);
 
-  // console.log('todos', todos);
-  // console.log('filter', filter);
-  // console.log('filteredTodos', filteredTodos);
-
   return (
     <>
-      {/* <Counter /> */}
-
       <section>
         <h2>Список задач</h2>
 
         <ul className="filter_list">
-          <li
-            onClick={() => setStatusFilter('all')}
-            className={filter === 'all' ? 'active' : ''}
-          >
-            Все
-          </li>
-          <li
-            onClick={() => setStatusFilter('active')}
-            className={filter === 'active' ? 'active' : ''}
-          >
-            Активные
-          </li>
-          <li
-            onClick={() => setStatusFilter('completed')}
-            className={filter === 'completed' ? 'active' : ''}
-          >
-            Выполненные
-          </li>
+          {filters.map((item) => (
+            <li key={item} className={filter === item ? 'active' : ''}>
+              <button type="button" onClick={() => handleFilterChange(item)}>
+                {item.toUpperCase()}
+              </button>
+            </li>
+          ))}
         </ul>
 
         <ul className="tasks_list">
