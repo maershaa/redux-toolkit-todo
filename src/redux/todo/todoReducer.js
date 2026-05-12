@@ -1,3 +1,6 @@
+import { createReducer } from '@reduxjs/toolkit';
+import { addTodo, deleteTodo, toggleTodo } from './todosActions';
+
 const initialState = {
   items: [
     {
@@ -23,43 +26,34 @@ const initialState = {
   ],
 };
 
-const todoReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'todos/add':
-      return {
-        ...state,
-        items: [
-          ...state.items,
-          {
-            id: Date.now(),
-            text: action.payload,
-            isCompleted: false,
-          },
-        ],
-      };
+// createReducer создает reducer и позволяет
+// обрабатывать actions через builder.addCase().
 
-    case 'todos/toggle':
-      return {
-        ...state,
-        items: state.items.map((todo) =>
-          todo.id === action.payload
-            ? {
-                ...todo,
-                isCompleted: !todo.isCompleted,
-              }
-            : todo,
-        ),
-      };
+// Под капотом Redux Toolkit использует Immer.
+// Благодаря этому можно писать код в стиле мутации state,
+// но Immer автоматически создает immutable state.
 
-    case 'todos/delete':
-      return {
-        ...state,
-        items: [...state.items.filter((el) => el.id !== action.payload)],
-      };
+const todoReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(addTodo, (state, action) => {
+      state.items.push({
+        id: Date.now(),
+        text: action.payload,
+        isCompleted: false,
+      });
+    })
 
-    default:
-      return state;
-  }
-};
+    .addCase(deleteTodo, (state, action) => {
+      state.items = state.items.filter((el) => el.id !== action.payload);
+    })
+
+    .addCase(toggleTodo, (state, action) => {
+      const todo = state.items.find((todo) => todo.id === action.payload);
+
+      if (todo) {
+        todo.isCompleted = !todo.isCompleted;
+      }
+    });
+});
 
 export { todoReducer };

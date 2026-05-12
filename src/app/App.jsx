@@ -1,4 +1,3 @@
-// import { Counter } from '../redux/Counter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useMemo } from 'react';
 
@@ -36,14 +35,10 @@ function App() {
     }
   }, [filter, todos]);
 
-  // console.log('todos', todos);
-  // console.log('filter', filter);
-  // console.log('filteredTodos', filteredTodos);
+  console.log('filteredTodos', filteredTodos);
 
   return (
     <>
-      {/* <Counter /> */}
-
       <section>
         <h2>Список задач</h2>
 
