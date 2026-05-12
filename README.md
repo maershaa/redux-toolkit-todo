@@ -45,7 +45,7 @@
 <details>
   <summary>⚙️ Посмотреть сравнение Actions и Reducers</summary>
   <br>
-  <img src="./src/assets/images/actions+reducer.png" width="100%">
+  <img src="./src/assets/images/actions + reducer.png" width="100%">
 </details>
 
 <details>
