@@ -28,6 +28,34 @@
 
 ---
 
+### 🚀 Сравнение реализаций Redux
+
+<details>
+  <summary>📂 Посмотреть сравнение архитектуры и файлов</summary>
+  <br>
+  <img src="./src/assets/images/main + architecture.png" width="100%">
+</details>
+
+<details>
+  <summary>⚙️ Посмотреть сравнение Store</summary>
+  <br>
+  <img src="./src/assets/images/store.png" width="100%">
+</details>
+
+<details>
+  <summary>⚙️ Посмотреть сравнение Actions и Reducers</summary>
+  <br>
+  <img src="./src/assets/images/actions+reducer.png" width="100%">
+</details>
+
+<details>
+  <summary>💻 Посмотреть использование в App.jsx</summary>
+  <br>
+  <img src="./src/assets/images/app.png" width="100%">
+</details>
+
+---
+
 # Ветка main — createSlice
 
 Современный и рекомендуемый подход Redux Toolkit.
