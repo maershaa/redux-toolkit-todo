@@ -1,72 +1,209 @@
-1. создали папку проекта
-2. В терминале установили -
-   npm create vite@latest . -- --template react
-3. Затем установите базовые зависимости:
-   npm install
+# React + Redux Toolkit — Todo Architecture Guide
 
-4. Теперь устанавливаем redux toolkit
-   npm install @reduxjs/toolkit react-redux
+Учебный проект Todo List для изучения разных подходов работы с Redux Toolkit.
 
-5. В src создаем папку redux а в ней - store.js
-   import { configureStore } from '@reduxjs/toolkit'
+В репозитории реализовано **3 архитектурных подхода Redux**:
 
-export default configureStore({
-reducer: {
-counter: counerReducer (функция которая принимает текущее состояние и объект, решает, как обновить состояние при необходимости, и возвращает новое состояние)
-},
-})
-
-6.  вам следует начать с того, чтобы обернуть все ваше приложение в <Provider>компонент, чтобы сделать хранилище доступным для всего дерева компонентов:
-    <StrictMode>
-    <Provider store={store}>
-    <App />
-    </Provider>
-    </StrictMode>,
-
-7.  создаем сам store в отдельном файле и оттуда импортируем в корень проекта и передаем в провайдер.
-    const store = createStore(rootReducer)
-
-После этого используя useSelector() вы можете извлекать любые данные из store и использовать их в своих функциональных компонентах.
-
-8.useSelector()
-Позволяет извлекать данные из состояния хранилища Redux для использования в этом компоненте с помощью функции-селектора.
-
-import { useSelector } from 'react-redux'
-
-export const CounterComponent = () => {
-const counter = useSelector((state) => state.counter) //достаем значение counter из общего store который передан в Provider
-
-return <div>{counter}</div>
-}
-
-8.  Архитектура при Redux Toolkit базовый урвоень или как лучше назвать =>
-    src/
-    redux/
-    store.js # Глобальная настройка store
-    todos/
-    todosReducer.js # Редьюсер и начальное состояние для задач
-    todosActions.js # (Опционально) экшены, если их много
-    filter/
-    filterReducer.js # Редьюсер для фильтра
-    components/
-    App.jsx
-
-        9.
-
-
-        -------------------------
-        ---------------------
-        ------------
-
-        ````md
-
-# React + Redux Toolkit — Базовая настройка проекта
-
-Краткая инструкция по созданию проекта с Redux Toolkit и React Redux.
+| Ветка            | Подход                                             |
+| ---------------- | -------------------------------------------------- |
+| `main`           | Redux Toolkit через `createSlice`                  |
+| `classic-redux`  | Классический Redux через `switch/case`             |
+| `create-reducer` | Redux Toolkit через `createAction + createReducer` |
 
 ---
 
-# 1. Создаем папку проекта
+# Что реализовано в проекте
+
+Во всех ветках используется:
+
+- React
+- Redux Toolkit
+- React Redux
+- Vite
+- Todo List
+- Фильтрация задач
+- Добавление задач
+- Удаление задач
+- Изменение статуса задач
+
+---
+
+# Ветка main — createSlice
+
+Современный и рекомендуемый подход Redux Toolkit.
+
+Используется:
+
+- configureStore
+- createSlice
+- reducers
+- actions
+- Immer
+- useSelector
+- useDispatch
+
+## Особенности
+
+`createSlice` автоматически:
+
+- создает reducer
+- создает actions
+- генерирует action creators
+- объединяет всю Redux-логику в одном файле
+
+## Пример
+
+```js
+const todoSlice = createSlice({
+  name: 'todos',
+  initialState,
+  reducers: {
+    addTodo(state, action) {
+      state.items.push({
+        id: Date.now(),
+        text: action.payload,
+      });
+    },
+  },
+});
+```
+
+## Структура
+
+```txt
+src/
+  redux/
+    store.js
+
+    todo/
+      todoSlice.js
+
+    filter/
+      filterSlice.js
+```
+
+---
+
+# Ветка classic-redux — классический Redux
+
+Базовый Redux-подход без helper-функций Redux Toolkit.
+
+Используется:
+
+- configureStore
+- reducers
+- switch/case
+- dispatch
+- useSelector
+- useDispatch
+
+## Особенности
+
+Вся логика разделяется вручную:
+
+- reducers
+- actions
+- action types
+
+State обновляется только через immutable update.
+
+## Пример
+
+```js
+const counterReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'counter/increment':
+      return {
+        ...state,
+        value: state.value + 1,
+      };
+
+    default:
+      return state;
+  }
+};
+```
+
+## Структура
+
+```txt
+src/
+  redux/
+    store.js
+
+    todo/
+      todoReducer.js
+      todoActions.js
+
+    filter/
+      filterReducer.js
+```
+
+---
+
+# Ветка create-reducer — createAction + createReducer
+
+Промежуточный подход Redux Toolkit.
+
+Используется:
+
+- configureStore
+- createAction
+- createReducer
+- builder.addCase()
+- Immer
+- dispatch
+- useSelector
+- useDispatch
+
+## Особенности
+
+Actions и reducers разделены по разным файлам, но:
+
+- switch/case уже не нужен
+- Redux Toolkit автоматически помогает работать с immutable state
+- используется builder.addCase()
+
+## Пример createAction
+
+```js
+export const addTodo = createAction('todos/add');
+```
+
+## Пример createReducer
+
+```js
+const todoReducer = createReducer(initialState, (builder) => {
+  builder.addCase(addTodo, (state, action) => {
+    state.items.push({
+      id: Date.now(),
+      text: action.payload,
+    });
+  });
+});
+```
+
+## Структура
+
+```txt
+src/
+  redux/
+    store.js
+
+    todo/
+      todoReducer.js
+      todoActions.js
+
+    filter/
+      filterReducer.js
+      filterActions.js
+```
+
+---
+
+# Как создать проект
+
+## 1. Создаем папку проекта
 
 ```bash
 mkdir my-app
@@ -83,7 +220,7 @@ npm create vite@latest . -- --template react
 
 ---
 
-# 3. Устанавливаем базовые зависимости
+# 3. Устанавливаем зависимости
 
 ```bash
 npm install
@@ -91,7 +228,7 @@ npm install
 
 ---
 
-# 4. Устанавливаем Redux Toolkit и React Redux
+# 4. Устанавливаем Redux Toolkit
 
 ```bash
 npm install @reduxjs/toolkit react-redux
@@ -99,189 +236,68 @@ npm install @reduxjs/toolkit react-redux
 
 ---
 
-# 5. Создаем папку redux и store.js
+# Подключение Redux
 
-Структура:
-
-```txt
-src/
-  redux/
-    store.js
-```
-
----
-
-# store.js
+## Создаем store.js
 
 ```js
 import { configureStore } from '@reduxjs/toolkit';
-import { counterReducer } from './counter/counterReducer';
 
 export default configureStore({
-  reducer: {
-    counter: counterReducer,
-  },
+  reducer: {},
 });
 ```
 
-## Что такое reducer
-
-Reducer — это функция, которая:
-
-- принимает текущее состояние (state)
-- принимает action
-- решает, как обновить состояние
-- возвращает новый state
-
 ---
 
-# 6. Подключаем Provider
-
-Redux store нужно передать всему приложению через Provider.
-
-main.jsx:
+# Подключаем Provider
 
 ```js
-import ReactDOM from 'react-dom/client';
-import { StrictMode } from 'react';
 import { Provider } from 'react-redux';
+import store from './redux/store';
 
-import App from './App.jsx';
-import store from './redux/store.js';
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>,
-);
+<Provider store={store}>
+  <App />
+</Provider>;
 ```
 
 ---
 
-# 7. Создаем reducer
+# useSelector()
 
-Структура:
+Позволяет получать данные из Redux store.
 
-```txt
-src/
-  redux/
-    counter/
-      counterReducer.js
+```js
+const todos = useSelector((state) => state.todos.items);
 ```
 
 ---
 
-# Пример reducer
+# useDispatch()
+
+Позволяет отправлять actions.
 
 ```js
-const initialState = {
-  value: 0,
-};
-
-const counterReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'counter/increment':
-      return {
-        ...state,
-        value: state.value + 1,
-      };
-
-    case 'counter/decrement':
-      return {
-        ...state,
-        value: state.value - 1,
-      };
-
-    default:
-      return state;
-  }
-};
-
-export { counterReducer };
-```
-
----
-
-# 8. useSelector()
-
-useSelector позволяет получать данные из Redux store.
-
-```js
-import { useSelector } from 'react-redux';
-
-export const CounterComponent = () => {
-  const counter = useSelector((state) => state.counter.value);
-
-  return <div>{counter}</div>;
-};
-```
-
-## Как это работает
-
-```js
-state.counter.value;
-```
-
-- state — весь Redux store
-- counter — slice из store
-- value — конкретное значение
-
----
-
-# 9. useDispatch()
-
-useDispatch позволяет отправлять actions в Redux.
-
-```js
-import { useDispatch } from 'react-redux';
-
 const dispatch = useDispatch();
 ```
 
 ---
 
-# Пример dispatch
-
-```js
-dispatch({
-  type: 'counter/increment',
-});
-```
-
-Action отправляется в reducer, после чего Redux обновляет state.
-
----
-
-# 10. Redux Flow
+# Redux Flow
 
 ## 1. Компонент вызывает dispatch
 
 ```js
-dispatch({
-  type: 'counter/increment',
-});
+dispatch(addTodo('Изучить Redux Toolkit'));
 ```
 
 ↓
 
 ## 2. Action попадает в reducer
 
-```js
-case 'counter/increment'
-```
-
 ↓
 
-## 3. Reducer возвращает новый state
-
-```js
-return {
-  ...state,
-  value: state.value + 1,
-};
-```
+## 3. Reducer обновляет state
 
 ↓
 
@@ -293,80 +309,19 @@ return {
 
 ---
 
-# 11. Базовая архитектура Redux Toolkit проекта
-
-```txt
-src/
-  redux/
-    store.js
-
-    todos/
-      todosReducer.js
-      todosActions.js
-
-    filter/
-      filterReducer.js
-
-  components/
-    App.jsx
-```
-
----
-
-# Что обычно хранится в redux/
-
-## store.js
-
-Глобальная настройка Redux store.
-
----
-
-## reducers
-
-Содержат:
-
-- initialState
-- switch/case
-- логику обновления state
-
----
-
-## actions (опционально)
-
-Используются, если actions становятся большими или повторяются.
-
----
-
 # Что важно понять новичку
 
-Redux строится вокруг 3 основных вещей:
+Redux строится вокруг 3 вещей:
 
-## Store
-
-Глобальное хранилище состояния приложения.
-
----
-
-## Actions
-
-Объекты, описывающие, ЧТО произошло.
-
-```js
-{
-  type: 'todos/add',
-  payload: 'Изучить Redux'
-}
-```
+| Концепция | Описание                       |
+| --------- | ------------------------------ |
+| Store     | Глобальное хранилище состояния |
+| Actions   | Описывают, что произошло       |
+| Reducers  | Обновляют state                |
 
 ---
 
-## Reducers
-
-Функции, которые решают, как обновить state.
-
----
-
-# Immutable update
+# Что такое immutable update
 
 Redux state нельзя изменять напрямую.
 
@@ -387,6 +342,55 @@ return {
 
 ---
 
+# Что изменил Redux Toolkit
+
+Redux Toolkit:
+
+✅ уменьшил количество boilerplate-кода
+✅ убрал необходимость писать switch/case
+✅ добавил Immer
+✅ упростил архитектуру Redux
+✅ сделал Redux более читаемым
+✅ автоматизировал создание actions
+
+---
+
+# Как переключаться между ветками
+
+## Посмотреть все ветки
+
+```bash
+git branch
 ```
 
+---
+
+## Переключиться на ветку
+
+```bash
+git checkout main
 ```
+
+или:
+
+```bash
+git checkout classic-redux
+```
+
+или:
+
+```bash
+git checkout create-reducer
+```
+
+---
+
+# Цель проекта
+
+Проект создан как учебное сравнение:
+
+- классического Redux
+- createReducer
+- createSlice
+
+чтобы понять эволюцию Redux Toolkit и разницу архитектурных подходов.

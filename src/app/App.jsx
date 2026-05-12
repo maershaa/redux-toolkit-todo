@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useMemo } from 'react';
-import { addTodo, deleteTodo, toggleTodo } from '../redux/todo/todosActions';
-import { setFilter } from '../redux/filter/filterActions';
+import { addTodo, deleteTodo, toggleTodo } from '../redux/todo/todoSlice'; //импорты редьюсеров для todo
+import { setFilter } from '../redux/filter/filterSlice'; //импорты редьюсеров для filter
 
 function App() {
   const todos = useSelector((state) => state.todos.items);
