@@ -14,7 +14,8 @@ function App() {
     evt.preventDefault();
     const todoText = evt.target.todoText.value.trim();
     dispatch(addTodo(todoText));
-    evt.target.todoText.value = '';
+    // evt.target.todoText.value = '';
+    evt.target.reset(); // - лучше так. метод reset очищает всю форму сразу и не нужно вручную чистить каждый input
   };
 
   const handleTodoDelete = (todoId) => {
